@@ -1,5 +1,7 @@
+import axios from 'axios';
+
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
@@ -17,6 +19,9 @@ import GetAppTwoToneIcon from '@mui/icons-material/GetAppOutlined';
 import FileCopyTwoToneIcon from '@mui/icons-material/FileCopyOutlined';
 import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfOutlined';
 import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveOutlined';
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
+import DownloadIcon from '@mui/icons-material/Download';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
   backgroundColor: theme.palette.secondary.dark,
@@ -54,6 +59,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
   }
 }));
 
+
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
 const EarningCard = ({ isLoading }) => {
@@ -68,6 +74,30 @@ const EarningCard = ({ isLoading }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  
+  const [totalWorkouts, setTotalWorkouts] = useState(0);
+
+  const today = new Date();
+
+  const getTotalWorkouts = async () => {
+    try {
+      const response  = await axios.get('http://localhost:8080/workouts/all', {
+        headers: {
+          'Accept' : 'application/json',
+          'Content-Type': 'application/json'
+        }
+      }).then((response) => {
+        setTotalWorkouts(response.data.length);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+  useEffect(() => {
+    getTotalWorkouts();
+  }, []);
 
   return (
     <>
@@ -106,7 +136,7 @@ const EarningCard = ({ isLoading }) => {
                       aria-haspopup="true"
                       onClick={handleClick}
                     >
-                      <MoreHorizIcon fontSize="inherit" />
+                      <MonitorHeartIcon fontSize="inherit" />
                     </Avatar>
                     <Menu
                       id="menu-earning-card"
@@ -124,7 +154,7 @@ const EarningCard = ({ isLoading }) => {
                         horizontal: 'right'
                       }}
                     >
-                      <MenuItem onClick={handleClose}>
+                      {/* <MenuItem onClick={handleClose}>
                         <GetAppTwoToneIcon sx={{ mr: 1.75 }} /> Import Card
                       </MenuItem>
                       <MenuItem onClick={handleClose}>
@@ -135,6 +165,9 @@ const EarningCard = ({ isLoading }) => {
                       </MenuItem>
                       <MenuItem onClick={handleClose}>
                         <ArchiveTwoToneIcon sx={{ mr: 1.75 }} /> Archive File
+                      </MenuItem> */}
+                      <MenuItem>
+                        <DownloadIcon sx={{ mr: 1.75 }} /> Download Fitness Data
                       </MenuItem>
                     </Menu>
                   </Grid>
@@ -143,7 +176,7 @@ const EarningCard = ({ isLoading }) => {
               <Grid item>
                 <Grid container alignItems="center">
                   <Grid item>
-                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>$500.00</Typography>
+                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>{totalWorkouts}</Typography>
                   </Grid>
                   <Grid item>
                     <Avatar
@@ -154,7 +187,7 @@ const EarningCard = ({ isLoading }) => {
                         color: theme.palette.secondary.dark
                       }}
                     >
-                      <ArrowUpwardIcon fontSize="inherit" sx={{ transform: 'rotate3d(1, 1, 1, 45deg)' }} />
+                      <FitnessCenterIcon fontSize="inherit" sx={{ transform: 'rotate3d(1, 1, 1, 45deg)' }} />
                     </Avatar>
                   </Grid>
                 </Grid>
@@ -167,7 +200,7 @@ const EarningCard = ({ isLoading }) => {
                     color: theme.palette.secondary[200]
                   }}
                 >
-                  Total Earning
+                  Total Workouts Since Inception
                 </Typography>
               </Grid>
             </Grid>
