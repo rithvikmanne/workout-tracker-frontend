@@ -25,7 +25,7 @@ import axios from 'axios';
 const AddWorkout = () => {
     var today = new Date();
     const [date, setDate] = useState(today);
-    const [duration, setDuration] = useState();
+    const [duration, setDuration] = useState(0);
     const [type, setType] = useState('');
 
     const handleDurationChange = (event) => {
@@ -36,15 +36,21 @@ const AddWorkout = () => {
         setType(event.target.value);
     };
 
-    // useEffect(() => {
-    //     console.log(date);
-        
-    //     console.log('new Date: ' + date.getFullYear().toString()+ '-0' + (date.getMonth() + 1).toString() + '-' + date.getDate().toString());
-    //   }, [date, duration, type]);
-
     const formatDate = (date) => {
         return new Date(date).getFullYear().toString() + '-0' + (new Date(date).getMonth() + 1).toString() + '-0' + new Date(date).getDate().toString();
     }
+
+    const validateFields = (duration, type) => {
+        const isDurationValid = !isNaN(duration) && duration !== 0;
+        const isTypeValid = (type === 'LEGS' || type === 'CHEST' || type === 'BACK' || type === 'FLEXIBIILITY' || type === 'CALISTHENICS' || type === 'CARDIO') && type !== '';
+        return isDurationValid && isTypeValid;
+    }
+
+    useEffect(() => {
+        console.log('duration: '+ duration);
+        console.log('type: ' + type);
+        console.log('validateFields: ' + validateFields(duration, type));
+    } , [duration, type]);
 
     const handlePostWorkout = () => {
         try {
@@ -72,9 +78,6 @@ const AddWorkout = () => {
         <MainCard title="Add New Workout">
             <SubCard>
                 <Grid container direction="column" justifyContent="space-between" alignItems="stretch" spacing='70'>
-                    <div>
-                        hello
-                    </div>
 
                     <Grid item >
                         <Grid container justifyContent="space-between">
@@ -87,7 +90,6 @@ const AddWorkout = () => {
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker value={dayjs(date)} onChange={(newVal) => setDate(newVal)} />
                                 </LocalizationProvider>
-                                {/* <TextField id="outlined-basic" label="Date" variant="outlined" value={date} onChange={handleDateChange} /> */}
                             </Grid>
                         </Grid>
                     </Grid>
@@ -100,7 +102,14 @@ const AddWorkout = () => {
                                 </MuiTypography>
                             </Grid>
                             <Grid item>
-                                <TextField id="outlined-basic" label="Duration" variant="outlined" value={duration} onChange={handleDurationChange} />
+                                <TextField 
+                                    error={isNaN(duration)}
+                                    id="outlined-basic" 
+                                    label="Duration" 
+                                    variant="outlined" 
+                                    value={duration} 
+                                    onChange={handleDurationChange} 
+                                />
                             </Grid>
                         </Grid>
                     </Grid>
@@ -142,7 +151,13 @@ const AddWorkout = () => {
 
             <SubCard>
                 <Grid container justifyContent="flex-end">
-                    <Button item variant="contained" color="primary" onClick={handlePostWorkout} >
+                    <Button 
+                        item 
+                        variant="contained" 
+                        color="primary" 
+                        onClick={handlePostWorkout} 
+                        disabled={!validateFields(duration, type)}
+                    >
                         Add Workout
                     </Button>
                 </Grid>
