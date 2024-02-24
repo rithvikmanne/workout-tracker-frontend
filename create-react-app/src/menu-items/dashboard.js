@@ -1,5 +1,6 @@
 // assets
 import { IconDashboard } from '@tabler/icons-react';
+import AddIcon from '@mui/icons-material/Add';
 
 // constant
 const icons = { IconDashboard };
@@ -17,6 +18,14 @@ const dashboard = {
       type: 'item',
       url: '/dashboard/default',
       icon: icons.IconDashboard,
+      breadcrumbs: false
+    },
+    {
+      id: 'addWorkout',
+      title: 'Add Workout',
+      type: 'item',
+      url: '/dashboard/addworkout',
+      icon: AddIcon,
       breadcrumbs: false
     }
   ]
