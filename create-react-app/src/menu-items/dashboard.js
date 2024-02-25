@@ -22,7 +22,7 @@ const dashboard = {
     },
     {
       id: 'addWorkout',
-      title: 'Add Workout',
+      title: 'Add',
       type: 'item',
       url: '/dashboard/addworkout',
       icon: AddIcon,
