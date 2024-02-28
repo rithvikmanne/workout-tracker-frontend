@@ -98,11 +98,22 @@ const AddWeight = () => {
                                         variant="outlined"
                                         value={weight}
                                         onChange={handleWeightChange}
+                                        helperText="Please enter a valid number."
                                     />
                                 </Grid>
                             </Grid>
                         </Grid>
-
+                        {/* <Grid container justifyContent="flex-end">
+                        <Button
+                            item
+                            variant="contained"
+                            color="primary"
+                            onClick={handlePostWeight}
+                            disabled={!validateFields(weight)}
+                        >
+                            Add Weight
+                        </Button>
+                    </Grid> */}
                     </Grid>
                 </SubCard>
                 <SubCard>

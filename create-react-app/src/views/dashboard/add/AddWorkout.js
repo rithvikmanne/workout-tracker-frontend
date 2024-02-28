@@ -97,6 +97,7 @@ const AddWorkout = () => {
                                         variant="outlined"
                                         value={duration}
                                         onChange={handleDurationChange}
+                                        helperText="Please enter a valid number."
                                     />
                                 </Grid>
                             </Grid>
