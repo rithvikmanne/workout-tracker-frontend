@@ -8,8 +8,12 @@ import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Typography }
 import MainCard from 'ui-component/cards/MainCard';
 import TotalIncomeCard from 'ui-component/cards/Skeleton/TotalIncomeCard';
 
-// assets
-import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
+import { useEffect, useState } from 'react';
+
+import axios from 'axios';
+
+import MonitorWeightIcon from '@mui/icons-material/MonitorWeight';
+
 
 // styles
 const CardWrapper = styled(MainCard)(({ theme }) => ({
@@ -44,6 +48,27 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 const TotalIncomeDarkCard = ({ isLoading }) => {
   const theme = useTheme();
 
+  const [recentWeight, setRecentWeight] = useState(0);
+
+  const getRecentWeight = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/weights/mostRecent', {
+        headers: {
+          'Accept' : 'application/json',
+          'Content-Type': 'application/json'
+        }
+      }).then((response) => {
+        setRecentWeight(response.data.value);
+      })
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    getRecentWeight();
+  }, []) 
+
   return (
     <>
       {isLoading ? (
@@ -63,7 +88,7 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
                       color: '#fff'
                     }}
                   >
-                    <TableChartOutlinedIcon fontSize="inherit" />
+                    <MonitorWeightIcon fontSize="inherit" />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
@@ -74,12 +99,12 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
                   }}
                   primary={
                     <Typography variant="h4" sx={{ color: '#fff' }}>
-                      $203k
+                      {recentWeight} (lbs)
                     </Typography>
                   }
                   secondary={
                     <Typography variant="subtitle2" sx={{ color: 'primary.light', mt: 0.25 }}>
-                      Total Income
+                      Recent Weight Measurement
                     </Typography>
                   }
                 />
